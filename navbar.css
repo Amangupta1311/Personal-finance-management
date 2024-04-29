@@ -1,0 +1,88 @@
+/* Additional custom styles */
+.hero-content {
+    text-align: center;
+    padding: 50px;
+}
+
+.hero-content h1 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.testimonials {
+    background-color: #f9f9f9;
+    padding: 50px 0;
+}
+
+.testimonial {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.testimonial p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.testimonial .author {
+    font-size: 14px;
+    color: #666;
+    text-align: right;
+}
+
+.help-center {
+    background-color: #f4f4f4;
+    padding: 50px 0;
+}
+
+.help-center h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.help-center p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.contact-support-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.contact-support-btn:hover {
+    background-color: #0056b3;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+

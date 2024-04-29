@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Expense Tracker</title>
+    <style>
+        /* CSS styles remain the same */
+        /* You can keep the existing styles or modify them as needed */
+    </style>
+</head>
+<body>
+    
+    <header>
+        <h1>Personal Expense Tracker</h1>
+    </header>
+    <div class="container">
+        <h2>Add Expense</h2>
+        <form id="expenseForm">
+            <select id="category" required>
+                <option value="">Select Category</option>
+                <option value="food">Food</option>
+                <option value="health">Health & Wellness</option>
+                <option value="bills">Bills</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="shopping">Shopping</option>
+                <option value="transport">Transport</option>
+                <option value="education">Education</option>
+                <option value="others">others</option>
+                <!-- Add more options as needed -->
+            </select>
+            <input type="number" id="amount" placeholder="Amount" min="0" step="0.01" required>
+            <input type="date" id="expenseDate" required>
+            <input type="submit" value="Add Expense">
+        </form>
+        <h2>View Expense List</h2>
+        <select id="monthFilter" onchange="filterExpenses()">
+            <option value="">All Months</option>
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+        </select>
+        <h2>Expense List</h2>
+        <table id="expenseTable">
+            <thead>
+                <tr>
+                    
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Expense items will be dynamically added here -->
+            </tbody>
+        </table>
+        <div id="expenseSummary">
+            <h2>Expense Summary</h2>
+        <ul>
+            <p id="monthlyExpenses"></p>
+            <p id="weeklyExpenses"></p>
+            <p id="yearlyExpenses"></p>
+            <p id="foodExpenses"></p>
+            <p id="billsExpenses"></p>
+            <p id="healthExpenses"></p> 
+            <p id="entertainmentExpenses"></p>
+            <p id="shoppingExpenses"></p>
+            <p id="transportExpenses"></p> 
+            <p id="educationExpenses"></p> 
+            <p id="othersExpenses"></p>
+        </ul>
+            <!-- Adjusted the IDs to remove spaces -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('expenseForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var category = document.getElementById('category').value;
+            var amount = parseFloat(document.getElementById('amount').value);
+            var date = document.getElementById('expenseDate').value;
+
+            if (category.trim() === '' || isNaN(amount)) {
+                alert('Please fill in both fields with valid data.');
+                return;
+            }
+
+            addExpense(category, amount, date);
+            document.getElementById('expenseForm').reset();
+        });
+
+        function addExpense(category, amount, date) {
+            var table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            cell1.innerHTML = category;
+
+            var cell2 = newRow.insertCell(1);
+            cell2.innerHTML = '$' + amount.toFixed(2);
+
+            var cell3 = newRow.insertCell(2);
+            cell3.innerHTML = date;
+
+            // Call function to update expense summary
+            updateExpenseSummary(category, amount);
+        }
+
+        function updateExpenseSummary(category, amount) {
+    var table = document.getElementById('expenseTable');
+    var rowCount = table.rows.length;
+
+    // Initialize variables
+    var monthlyExpenses = 0;
+    var weeklyExpenses = 0;
+    var yearlyExpenses = 0;
+    var foodExpenses = 0;
+    var billsExpenses = 0;
+    var entertainmentExpenses = 0;
+    var shoppingExpenses = 0;
+    var transportExpenses = 0;
+    var educationExpenses = 0;
+    var othersExpenses = 0;
+
+    // Add more categories as needed
+
+    var currentDate = new Date();
+    var currentWeek = getWeekNumber(currentDate);
+    var currentMonth = currentDate.getMonth();
+    var currentYear = currentDate.getFullYear();
+
+    for (var i = 1; i < rowCount; i++) {
+        var row = table.rows[i];
+        var expenseCategory = row.cells[0].textContent; // Use textContent instead of innerHTML
+        var expenseDate = new Date(row.cells[2].textContent); // Use textContent instead of innerHTML
+        var expenseAmount = parseFloat(row.cells[1].textContent.substring(1));
+
+        // Monthly expenses
+        if (expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear) {
+            monthlyExpenses += expenseAmount;
+        }
+
+        // Weekly expenses
+        var expenseWeek = getWeekNumber(expenseDate);
+        if (expenseWeek === currentWeek && expenseDate.getFullYear() === currentYear) {
+            weeklyExpenses += expenseAmount;
+        }
+
+        // Yearly expenses
+        if (expenseDate.getFullYear() === currentYear) {
+            yearlyExpenses += expenseAmount;
+        }
+
+        // Category-wise expenses
+        switch (expenseCategory) {
+            case 'food':
+                foodExpenses += expenseAmount;
+                break;
+            case 'bills':
+                billsExpenses += expenseAmount;
+                break;
+            case 'entertainment':
+                entertainmentExpenses += expenseAmount;
+                break;
+            case 'shopping':
+                shoppingExpenses += expenseAmount;
+                break;
+            case 'transport':
+                transportExpenses += expenseAmount;
+                break;
+            case 'education':
+                educationExpenses += expenseAmount;
+                break;
+            case 'others':
+                othersExpenses += expenseAmount;
+                break;
+            // Add more categories as needed
+        }
+    }
+
+    // Update summary elements
+    document.getElementById('monthlyExpenses').textContent = 'Monthly Expenses: $' + monthlyExpenses.toFixed(2);
+    document.getElementById('weeklyExpenses').textContent = 'Weekly Expenses: $' + weeklyExpenses.toFixed(2);
+    document.getElementById('yearlyExpenses').textContent = 'Yearly Expenses: $' + yearlyExpenses.toFixed(2);
+    document.getElementById('foodExpenses').textContent = 'Food Expenses: $' + foodExpenses.toFixed(2);
+    document.getElementById('billsExpenses').textContent = 'Bills Expenses: $' + billsExpenses.toFixed(2);
+    document.getElementById('entertainmentExpenses').textContent = 'Entertainment Expenses: $' + entertainmentExpenses.toFixed(2);
+    document.getElementById('shoppingExpenses').textContent = 'Shopping Expenses: $' + shoppingExpenses.toFixed(2);
+    document.getElementById('transportExpenses').textContent = 'Transport Expenses: $' + transportExpenses.toFixed(2);
+    document.getElementById('educationExpenses').textContent = 'Education Expenses: $' + educationExpenses.toFixed(2);
+    document.getElementById('othersExpenses').textContent = 'Others Expenses: $' + othersExpenses.toFixed(2);
+}
+
+// Rest of the code remains the same
+
+
+        // Function to get the week number of a given date
+        function getWeekNumber(date) {
+            var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            var dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+        }
+
+        // Function to filter expenses by month
+        function filterExpenses() {
+            var monthFilter = document.getElementById('monthFilter').value;
+            var table = document.getElementById('expenseTable');
+            var rowCount = table.rows.length;
+
+            for (var i = 1; i < rowCount; i++) {
+                var row = table.rows[i];
+                var expenseDate = new Date(row.cells[2].innerHTML);
+                var expenseMonth = expenseDate.getMonth();
+
+                if (monthFilter === '' || expenseMonth == monthFilter) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+    </script>
+    <a href="navbar.html">back to home</a>
+</body>
+</html>

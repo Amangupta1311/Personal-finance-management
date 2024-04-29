@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Goals</title>
+    <link rel="stylesheet" href="myfinance.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Set Financial Goals</h1>
+        <form id="goalForm">
+            <div class="form-group">
+                <label for="goalType">Goal Type:</label>
+                <select id="goalType">
+                    <option value="vacation">Vacation</option>
+                    <option value="house">Buying a House</option>
+                    <option value="debt">Paying off Debt</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="goalAmount">Goal Amount ($):</label>
+                <input type="number" id="goalAmount" required>
+            </div>
+            <div class="form-group">
+                <label for="monthlyIncome">Monthly Income ($):</label>
+                <input type="number" id="monthlyIncome" required>
+            </div>
+            <div class="form-group">
+                <label for="currentSavings">Current Savings ($):</label>
+                <input type="number" id="currentSavings" required>
+            </div>
+            <div class="form-group">
+                <label for="investmentReturns">Expected Investment Returns (%):</label>
+                <input type="number" id="investmentReturns" min="0" max="100" step="0.01">
+            </div>
+            <button type="submit">Set Goal</button>
+        </form>
+        <div id="predictionResult"></div>
+    </div>
+
+    <script>
+        document.getElementById('goalForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form values
+            const goalType = document.getElementById('goalType').value;
+            const goalAmount = parseFloat(document.getElementById('goalAmount').value);
+            const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
+            const currentSavings = parseFloat(document.getElementById('currentSavings').value);
+            const investmentReturns = parseFloat(document.getElementById('investmentReturns').value) || 0;
+
+            // Prediction algorithm
+            const savingsRequired = goalAmount - currentSavings;
+            const monthlySavings = savingsRequired / 12;
+            const monthlySavingsWithReturns = monthlySavings / ((100 + investmentReturns) / 100);
+            const timeToReachGoalMonths = Math.ceil(savingsRequired / monthlySavingsWithReturns);
+            const years = Math.floor(timeToReachGoalMonths / 12);
+            const months = timeToReachGoalMonths % 12;
+
+            // Recommendation
+            let recommendation = '';
+            if (currentSavings >= goalAmount) {
+                recommendation = 'Congratulations! You have already reached your goal.';
+            } else {
+                if (years > 0) {
+                    recommendation += `It will take approximately ${years} year(s)`;
+                    if (months > 0) {
+                        recommendation += ` and ${months} month(s)`;
+                    }
+                    recommendation += ' to reach your goal.';
+                } else {
+                    recommendation = `It will take approximately ${months} month(s) to reach your goal.`;
+                }
+                recommendation += ' Consider increasing your savings rate or investing in higher-return assets to achieve your goal faster.';
+            }
+
+            // Display result
+            document.getElementById('predictionResult').innerHTML = `<p>${recommendation}</p>`;
+        });
+    </script>
+</body>
+</html>
